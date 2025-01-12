@@ -44,6 +44,7 @@ class ButtonManager {
                 console.log(this.buttonContainer[i]);
                 console.log("button created");
             }
+            this.buttonContainer.forEach(button => button.button.style.cursor = 'pointer');
             await this.scrambleButtons(this.buttonContainer, buttonCount);
             return true;
         } 
@@ -79,8 +80,14 @@ class ButtonManager {
     //chatGPT idea to scramble the buttons to random locations
     scrambleButtons(buttonContainer, n){
         return new Promise(resolve  => {
+
             // Pause for `n` seconds before starting the scrambling process
             setTimeout(() => {
+            // disable all button intially when scrambling
+            this.buttonContainer.forEach(button => {
+                button.button.disabled = true;
+                button.button.style.cursor = 'default';
+            })
                 let counter = 0;
                 const interval = setInterval(() => {
                     if(counter < n){
@@ -88,6 +95,11 @@ class ButtonManager {
                         counter++;
                     } else {
                         clearInterval(interval); // Stop the interval once buttons have been scrambled `n` times
+                        
+                        //enable all buttons to be clickable after scrambling is complete
+                        this.buttonContainer.forEach(button => {
+                            button.button.disabled = false;
+                        })
                         console.log("finish scramble");
                         resolve();
                     }
